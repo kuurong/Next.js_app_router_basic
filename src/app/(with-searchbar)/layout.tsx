@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
-import SearchBar from "./searchbar";
+import { ReactNode, Suspense } from "react";
+import Searchbar from "../../components/searchbar";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div>
-      <SearchBar />
+      <Searchbar />
       {children}
     </div>
   );
