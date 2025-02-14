@@ -1,28 +1,26 @@
-import BookItem from "@/components/book-item";
-import { BookData } from "@/types";
+import BookItem from '@/components/book-item'
+import { BookData } from '@/types'
 
 export default async function Page({
   searchParams,
 }: {
-  searchParams: {
-    //자동으로 가져옴
-    q?: string;
-  };
+  searchParams: Promise<{ q?: string }>
 }) {
-  const { q } = await searchParams;
+  const { q } = await searchParams
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`
-  );
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`,
+    { cache: 'force-cache' }
+  )
   if (!res.ok) {
-    return <div>오류가 발생했습니다...</div>;
+    return <div>오류가 발생했습니다...</div>
   }
 
-  const books: BookData[] = await res.json();
+  const books: BookData[] = await res.json()
   return (
     <div>
-      {books.map((book) => (
+      {books.map(book => (
         <BookItem key={book.id} {...book} />
       ))}
     </div>
-  );
+  )
 }

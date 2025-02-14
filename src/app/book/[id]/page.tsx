@@ -1,19 +1,26 @@
-import style from "./page.module.css";
+import { notFound } from 'next/navigation'
+import style from './page.module.css'
+
+export function generateStaticParams() {
+  return [{ id: '1' }, { id: '2' }, { id: '3' }]
+}
 
 export default async function Page({
   params,
 }: {
-  params: { id: string | string[] };
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${params.id}`
-  );
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`
+  )
   if (!res.ok) {
-    return <div>오류가 발생했습니다...</div>;
+    if (res.status === 404) {
+      notFound()
+    }
   }
-  const book = await res.json();
-  const { id, title, subTitle, description, author, publisher, coverImgUrl } =
-    book;
+  const book = await res.json()
+  const { title, subTitle, description, author, publisher, coverImgUrl } = book
 
   return (
     <div className={style.container}>
@@ -30,5 +37,5 @@ export default async function Page({
       </div>
       <div className={style.description}>{description}</div>
     </div>
-  );
+  )
 }

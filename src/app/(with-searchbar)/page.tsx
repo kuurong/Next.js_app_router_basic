@@ -1,18 +1,20 @@
-import BookItem from "@/components/book-item";
-import style from "./page.module.css";
-import books from "@/mock/books.json";
-import { BookData } from "@/types";
+import BookItem from '@/components/book-item'
+import style from './page.module.css'
+import { BookData } from '@/types'
 
 async function AllBooks() {
-  console.log("AllBooks");
+  console.log('AllBooks')
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
-    { cache: "no-store" } //인덱스 페이지에 접속할때마다 매번 새롭게 데이터불러옴
-  );
+    //{ cache: 'no-store' } //인덱스 페이지에 접속할때마다 매번 새롭게 데이터불러옴
+    {
+      cache: 'force-cache', // static page
+    }
+  )
   if (!response.ok) {
-    return <div>오류가 발생했습니다....</div>;
+    return <div>오류가 발생했습니다....</div>
   }
-  const allBooks: BookData[] = await response.json();
+  const allBooks: BookData[] = await response.json()
 
   return (
     <div>
@@ -24,19 +26,18 @@ async function AllBooks() {
         )
       )}
     </div>
-  );
+  )
 }
 
 async function RecoBooks() {
-  console.log("RecoBooks");
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/random`,
-    { next: { revalidate: 3 } }
-  );
+    { next: { revalidate: 3 } } // static page
+  )
   if (!response.ok) {
-    return <div>오류가 발생했습니다...</div>;
+    return <div>오류가 발생했습니다...</div>
   }
-  const recoBooks: BookData[] = await response.json();
+  const recoBooks: BookData[] = await response.json()
 
   return (
     <div>
@@ -48,11 +49,11 @@ async function RecoBooks() {
         )
       )}
     </div>
-  );
+  )
 }
 
 export default async function Home() {
-  console.log("Home component");
+  console.log('Home component')
   return (
     <div className={style.container}>
       <section>
@@ -64,5 +65,5 @@ export default async function Home() {
         <AllBooks />
       </section>
     </div>
-  );
+  )
 }
